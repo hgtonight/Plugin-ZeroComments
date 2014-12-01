@@ -16,7 +16,7 @@
 $PluginInfo['ZeroComments'] = array(
     'Name' => 'Zero Comments',
     'Description' => "A Vanilla Forums plugin in that adds a 'Zero Comments' link to the discussion filter box. Sponsored by VanillaSkins.com - #1 Themeshop for Vanilla.",
-    'Version' => '0.1',
+    'Version' => '0.2',
     'RequiredApplications' => array('Vanilla' => '2.0.18.13'),
     'RequiredTheme' => FALSE,
     'RequiredPlugins' => FALSE,
@@ -62,11 +62,15 @@ class ZeroComments extends Gdn_Plugin {
   }
 
   /**
-   * Set the count right for the pager
-   * @param type $Sender
+   * Set the count to the cache value. This will use a more pager unless caching
+   * is enabled.
+   * 
+   * @param DiscussionsController $Sender
    */
-  public function DiscussionsController_ZeroComments_Render($Sender) {
-    $Sender->SetData('CountDiscussions', FALSE);
+  public function DiscussionsController_Render_Before($Sender) {
+    if($this->CustomView) {
+      $Sender->SetData('CountDiscussions', Gdn::Cache()->Get('ZeroComments-Count'));
+    }
   }
 
   /**
